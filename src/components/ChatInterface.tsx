@@ -38,6 +38,7 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
+      console.log('Sending to webhook:', text);
       const response = await fetch('https://avishkarofficial.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a', {
         method: 'POST',
         headers: {
@@ -45,6 +46,8 @@ const ChatInterface = () => {
         },
         body: JSON.stringify({ message: text }),
       });
+
+      console.log('Webhook response:', await response.text());
 
       const data = await response.json();
       
@@ -96,3 +99,4 @@ const ChatInterface = () => {
 };
 
 export default ChatInterface;
+
