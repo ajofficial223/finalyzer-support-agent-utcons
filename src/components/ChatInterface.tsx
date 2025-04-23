@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import MessageList from './MessageList';
@@ -46,13 +47,29 @@ const ChatInterface = () => {
         body: JSON.stringify({ message: text }),
       });
 
-      console.log('Webhook response:', await response.text());
-
-      const data = await response.json();
+      const responseText = await response.text();
+      console.log('Webhook response:', responseText);
       
+      let aiReply = "I apologize, but I couldn't process your request.";
+      
+      // Try to parse the response as JSON if it's not empty
+      if (responseText && responseText.trim()) {
+        try {
+          const data = JSON.parse(responseText);
+          if (data.reply) {
+            aiReply = data.reply;
+          } else if (data.output) {
+            // Based on the network logs, sometimes the API returns output instead of reply
+            aiReply = data.output;
+          }
+        } catch (parseError) {
+          console.error('Error parsing webhook response:', parseError);
+        }
+      }
+
       const aiMessage: Message = {
         id: Date.now().toString(),
-        text: data.reply || "I apologize, but I couldn't process your request.",
+        text: aiReply,
         sender: 'ai',
         timestamp: new Date(),
       };
