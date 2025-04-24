@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, RotateCcw, History } from 'lucide-react';
 import MessageList from './MessageList';
@@ -43,13 +42,11 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Load chat history from localStorage on component mount
   useEffect(() => {
     const savedHistory = localStorage.getItem('chatHistory');
     if (savedHistory) {
       try {
         const parsedHistory = JSON.parse(savedHistory);
-        // Convert date strings back to Date objects
         const formattedHistory = parsedHistory.map((session: any) => ({
           ...session,
           createdAt: new Date(session.createdAt),
@@ -65,9 +62,8 @@ const ChatInterface = () => {
     }
   }, []);
 
-  // Save current chat to history when it has messages beyond welcome
   useEffect(() => {
-    if (messages.length > 1) { // More than just the welcome message
+    if (messages.length > 1) {
       const currentSessionId = localStorage.getItem('currentSessionId') || Date.now().toString();
       localStorage.setItem('currentSessionId', currentSessionId);
       
@@ -75,13 +71,11 @@ const ChatInterface = () => {
       const sessionIndex = updatedHistory.findIndex(s => s.id === currentSessionId);
       
       if (sessionIndex >= 0) {
-        // Update existing session
         updatedHistory[sessionIndex] = {
           ...updatedHistory[sessionIndex],
           messages
         };
       } else {
-        // Create new session
         updatedHistory.push({
           id: currentSessionId,
           messages,
@@ -122,14 +116,12 @@ const ChatInterface = () => {
       
       let aiReply = "I apologize, but I couldn't process your request.";
       
-      // Try to parse the response as JSON if it's not empty
       if (responseText && responseText.trim()) {
         try {
           const data = JSON.parse(responseText);
           if (data.reply) {
             aiReply = data.reply;
           } else if (data.output) {
-            // Based on the network logs, sometimes the API returns output instead of reply
             aiReply = data.output;
           }
         } catch (parseError) {
@@ -178,13 +170,9 @@ const ChatInterface = () => {
       <header className="bg-white shadow-sm px-6 py-4 flex items-center">
         <div className="flex-1 flex items-center">
           <img 
-            src="/finalyzer-logo.png" 
+            src="/lovable-uploads/5feb2d40-47dc-440e-b075-22b9d60d713b.png"
             alt="Finalyzer Logo" 
-            className="h-8 mr-4"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.style.display = 'none';
-            }}
+            className="h-10 mr-4"
           />
           <div>
             <h1 className="text-xl font-semibold">Finalyzer Support AI</h1>
@@ -194,7 +182,7 @@ const ChatInterface = () => {
         <div className="flex space-x-2">
           <button 
             onClick={resetChat} 
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md transition-all duration-200 ease-in-out"
             title="Reset Chat"
           >
             <RotateCcw size={16} />
@@ -202,7 +190,7 @@ const ChatInterface = () => {
           </button>
           <button 
             onClick={() => setIsHistoryOpen(true)} 
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md transition-all duration-200 ease-in-out"
             title="View Chat History"
           >
             <History size={16} />
@@ -224,9 +212,7 @@ const ChatInterface = () => {
           <MessageInput onSend={sendMessage} isLoading={isLoading} />
         </div>
         <div className="text-center text-sm text-gray-500 py-2 border-t">
-          <a href="https://lovable.ai" target="_blank" rel="noopener noreferrer" className="hover:text-[#4A90E2] transition-colors">
-            Created with ❤️ using Lovable
-          </a>
+          Testing Agent Created by UTCONS
         </div>
       </footer>
       

@@ -31,9 +31,9 @@ const MessageInput = ({ onSend, isLoading }: MessageInputProps) => {
       <button
         type="submit"
         disabled={!message.trim() || isLoading}
-        className={`p-2 rounded-lg ${
+        className={`p-2 rounded-lg transition-all duration-200 ease-in-out ${
           message.trim() && !isLoading
-            ? 'bg-[#4A90E2] text-white hover:bg-[#357ABD] transition-colors'
+            ? 'bg-[#4A90E2] text-white hover:bg-[#357ABD] hover:shadow-md active:scale-95'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
         }`}
       >
