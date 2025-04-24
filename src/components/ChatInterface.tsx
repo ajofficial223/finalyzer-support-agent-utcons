@@ -21,10 +21,10 @@ interface ChatSession {
   createdAt: Date;
 }
 
-const WELCOME_MESSAGE = {
+const WELCOME_MESSAGE: Message = {
   id: 'welcome',
   text: '👋 Hi! I\'m Finalyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!',
-  sender: 'ai',
+  sender: 'ai' as const,
   timestamp: new Date(),
 };
 
@@ -100,7 +100,7 @@ const ChatInterface = () => {
     const userMessage: Message = {
       id: Date.now().toString(),
       text,
-      sender: 'user',
+      sender: 'user' as const,
       timestamp: new Date(),
     };
 
@@ -140,7 +140,7 @@ const ChatInterface = () => {
       const aiMessage: Message = {
         id: Date.now().toString(),
         text: aiReply,
-        sender: 'ai',
+        sender: 'ai' as const,
         timestamp: new Date(),
       };
 
@@ -150,7 +150,7 @@ const ChatInterface = () => {
       const errorMessage: Message = {
         id: Date.now().toString(),
         text: "I'm sorry, but I couldn't connect to the server. Please try again.",
-        sender: 'ai',
+        sender: 'ai' as const,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
