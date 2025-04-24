@@ -109,7 +109,7 @@ const ChatInterface = () => {
 
     try {
       console.log('Sending to webhook:', text);
-      const response = await fetch('https://avishkarofficial.app.n8n.cloud/webhook-test/8d956423-35a9-4b99-8205-63af1b4e721a', {
+      const response = await fetch('https://avishkarofficial.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
