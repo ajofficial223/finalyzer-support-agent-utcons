@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Message } from './ChatInterface';
+import FormattedMessage from './FormattedMessage';
 
 interface MessageBubbleProps {
   message: Message;
@@ -18,7 +19,11 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
             : 'bg-white text-gray-800 rounded-bl-none'
         }`}
       >
-        {message.text}
+        {isUser ? (
+          message.text
+        ) : (
+          <FormattedMessage text={message.text} />
+        )}
       </div>
     </div>
   );
