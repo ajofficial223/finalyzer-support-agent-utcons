@@ -35,12 +35,18 @@ const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const timeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('chatHistory');
@@ -203,9 +209,11 @@ const ChatInterface = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-hidden">
-        <MessageList messages={messages} isLoading={isLoading} />
-        <div ref={messagesEndRef} />
+      <main className="flex-1 overflow-hidden relative">
+        <div className="h-full overflow-y-auto">
+          <MessageList messages={messages} isLoading={isLoading} />
+          <div ref={messagesEndRef} />
+        </div>
       </main>
 
       <footer className="bg-white border-t mt-auto">

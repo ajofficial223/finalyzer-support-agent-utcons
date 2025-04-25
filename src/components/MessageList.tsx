@@ -13,54 +13,69 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
   const [displayMessages, setDisplayMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentTypingMessage, setCurrentTypingMessage] = useState<string>('');
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.sender === 'ai') {
-        setIsTyping(true);
-        let currentText = '';
-        const words = lastMessage.text.split(' ');
-        let wordIndex = 0;
+    // Reset typing animation when no messages
+    if (messages.length === 0) {
+      setDisplayMessages([]);
+      setIsTyping(false);
+      setCurrentTypingMessage('');
+      setTypingMessageId(null);
+      return;
+    }
 
-        const typingInterval = setInterval(() => {
-          if (wordIndex < words.length) {
-            currentText += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
-            setCurrentTypingMessage(currentText);
-            wordIndex++;
-          } else {
-            clearInterval(typingInterval);
-            setIsTyping(false);
-            setDisplayMessages(messages);
-          }
-        }, 50); // Adjust speed as needed
+    // Check if there's a new message to display with typing animation
+    const lastMessage = messages[messages.length - 1];
+    
+    if (lastMessage.sender === 'ai' && lastMessage.id !== typingMessageId) {
+      // Remember this message is being animated
+      setTypingMessageId(lastMessage.id);
+      setIsTyping(true);
+      
+      // Display all previous messages immediately
+      setDisplayMessages(messages.slice(0, -1));
+      
+      let currentText = '';
+      const words = lastMessage.text.split(' ');
+      let wordIndex = 0;
 
-        return () => clearInterval(typingInterval);
-      } else {
-        setDisplayMessages(messages);
-      }
+      const typingInterval = setInterval(() => {
+        if (wordIndex < words.length) {
+          currentText += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
+          setCurrentTypingMessage(currentText);
+          wordIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setIsTyping(false);
+          setDisplayMessages(messages);
+        }
+      }, 50); // Adjust speed as needed
+
+      return () => clearInterval(typingInterval);
+    } else if (lastMessage.sender === 'user' || !isTyping) {
+      // Immediately display user messages or when not typing
+      setDisplayMessages(messages);
     }
   }, [messages]);
 
   return (
     <div className="flex flex-col space-y-4 p-4 overflow-y-auto h-full">
-      {displayMessages.slice(0, -1).map((message) => (
+      {/* Display all messages except the last AI one if it's currently being typed */}
+      {displayMessages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       ))}
       
-      {isTyping && displayMessages.length > 0 ? (
+      {/* Display the AI message currently being typed */}
+      {isTyping && (
         <MessageBubble 
           message={{
-            ...displayMessages[displayMessages.length - 1],
-            text: currentTypingMessage
+            id: typingMessageId || 'typing',
+            text: currentTypingMessage,
+            sender: 'ai',
+            timestamp: new Date()
           }} 
         />
-      ) : (
-        displayMessages.length > 0 && (
-          <MessageBubble 
-            message={displayMessages[displayMessages.length - 1]} 
-          />
-        )
       )}
 
       {isLoading && (

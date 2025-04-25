@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface SuggestedQuestionsProps {
   onSendQuestion: (question: string) => void;
@@ -17,9 +17,36 @@ const questions = [
 ];
 
 const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({ onSendQuestion }) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Add scroll hint indicator
+    const container = scrollContainerRef.current;
+    if (container) {
+      // Check if scrollable
+      const isScrollable = container.scrollWidth > container.clientWidth;
+      if (isScrollable) {
+        // Add subtle animation to indicate scrollability
+        container.classList.add('pulse-right');
+      }
+    }
+  }, []);
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      // Remove animation once user starts scrolling
+      container.classList.remove('pulse-right');
+    }
+  };
+
   return (
     <div className="w-full overflow-hidden">
-      <div className="flex overflow-x-auto pb-4 gap-2 hide-scrollbar">
+      <div 
+        ref={scrollContainerRef}
+        className="flex overflow-x-auto pb-4 gap-2 hide-scrollbar"
+        onScroll={handleScroll}
+      >
         <div className="flex gap-2 px-2 snap-x snap-mandatory">
           {questions.map((question, index) => (
             <button
@@ -43,6 +70,28 @@ const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({ onSendQuestion 
           .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+          }
+          
+          /* Subtle animation to indicate scrollability */
+          @keyframes pulseRight {
+            0%, 100% { box-shadow: 0 0 0 rgba(74, 144, 226, 0); }
+            50% { box-shadow: 0 0 10px rgba(74, 144, 226, 0.3); }
+          }
+          .pulse-right {
+            animation: pulseRight 2s ease-in-out infinite;
+          }
+          
+          /* Add scroll indicators */
+          .hide-scrollbar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(245,247,250,0.8));
+            pointer-events: none;
+            z-index: 10;
           }
         `
       }} />
