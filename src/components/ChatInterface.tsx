@@ -166,23 +166,25 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#F5F7FA]">
-      <header className="bg-white shadow-sm px-6 py-4 flex items-center">
+    <div className="flex flex-col h-screen bg-[#F5F7FA] w-full">
+      <header className="bg-white shadow-sm px-4 sm:px-6 py-3 sm:py-4 flex items-center">
         <div className="flex-1 flex items-center">
           <img 
             src="/lovable-uploads/5feb2d40-47dc-440e-b075-22b9d60d713b.png"
             alt="Finalyzer Logo" 
-            className="h-10 mr-4"
+            className="h-8 sm:h-10 mr-3 sm:mr-4"
           />
           <div>
-            <h1 className="text-xl font-semibold">Finalyzer Support AI</h1>
-            <p className="text-sm text-gray-500">Your smart assistant for financial reporting and analytics.</p>
+            <h1 className="text-lg sm:text-xl font-semibold">Finalyzer Support AI</h1>
+            <p className="text-xs sm:text-sm text-gray-500">Your smart assistant for financial reporting and analytics.</p>
           </div>
         </div>
         <div className="flex space-x-2">
           <button 
             onClick={resetChat} 
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md transition-all duration-200 ease-in-out"
+            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm bg-gray-100 
+              hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md 
+              transition-all duration-200 ease-in-out"
             title="Reset Chat"
           >
             <RotateCcw size={16} />
@@ -190,7 +192,9 @@ const ChatInterface = () => {
           </button>
           <button 
             onClick={() => setIsHistoryOpen(true)} 
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md transition-all duration-200 ease-in-out"
+            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm bg-gray-100 
+              hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md 
+              transition-all duration-200 ease-in-out"
             title="View Chat History"
           >
             <History size={16} />
@@ -204,11 +208,11 @@ const ChatInterface = () => {
         <div ref={messagesEndRef} />
       </main>
 
-      <footer className="bg-white border-t">
-        <div className="container mx-auto px-4 py-2">
+      <footer className="bg-white border-t mt-auto">
+        <div className="container mx-auto px-2 py-2">
           <SuggestedQuestions onSendQuestion={sendMessage} />
         </div>
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto py-4">
           <MessageInput onSend={sendMessage} isLoading={isLoading} />
         </div>
         <div className="text-center text-sm text-gray-500 py-2 border-t">
