@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Message } from './ChatInterface';
 import MessageBubble from './MessageBubble';
 import { Loader2 } from 'lucide-react';
@@ -14,6 +14,15 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const [currentTypingMessage, setCurrentTypingMessage] = useState<string>('');
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [displayMessages, isLoading]);
 
   useEffect(() => {
     // Reset typing animation when no messages
@@ -61,12 +70,10 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
 
   return (
     <div className="flex flex-col space-y-4 p-4 overflow-y-auto h-full">
-      {/* Display all messages except the last AI one if it's currently being typed */}
       {displayMessages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       ))}
       
-      {/* Display the AI message currently being typed */}
       {isTyping && (
         <MessageBubble 
           message={{
@@ -85,6 +92,7 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
           <div className="w-2 h-2 bg-[#4A90E2] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       )}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
