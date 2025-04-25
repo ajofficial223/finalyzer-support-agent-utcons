@@ -22,7 +22,7 @@ interface ChatSession {
 
 const WELCOME_MESSAGE: Message = {
   id: 'welcome',
-  text: '👋 Hi! I\'m Finalyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!',
+  text: '👋 Hi! I\'m FinAlyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!',
   sender: 'ai' as const,
   timestamp: new Date(),
 };
@@ -177,11 +177,11 @@ const ChatInterface = () => {
         <div className="flex-1 flex items-center">
           <img 
             src="/lovable-uploads/5feb2d40-47dc-440e-b075-22b9d60d713b.png"
-            alt="Finalyzer Logo" 
+            alt="FinAlyzer Logo" 
             className="h-8 sm:h-10 mr-3 sm:mr-4"
           />
           <div>
-            <h1 className="text-lg sm:text-xl font-semibold">Finalyzer Support AI</h1>
+            <h1 className="text-lg sm:text-xl font-semibold">FinAlyzer Support AI</h1>
             <p className="text-xs sm:text-sm text-gray-500">Your smart assistant for financial reporting and analytics.</p>
           </div>
         </div>
