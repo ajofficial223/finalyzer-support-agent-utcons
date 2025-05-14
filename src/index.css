@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -51,9 +49,6 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
-    
-    --hue1: 0deg;
-    --hue2: 300deg;
   }
 
   .dark {
@@ -92,135 +87,15 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-    
-    --hue1: 220deg;
-    --hue2: 260deg;
   }
-}
-
-@property --hue1 {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-@property --hue2 {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
 }
 
 @layer base {
   * {
     @apply border-border;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-  
-  html,
-  body {
-    overscroll-behavior-x: none;
-    overscroll-behavior-y: none;
-    scroll-behavior: smooth;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    font-family: "Geist", sans-serif;
   }
 
   body {
-    @apply text-foreground;
-    position: relative;
-    width: 100%;
-    max-width: 100vw;
-    min-height: 100vh;
-    overflow-x: hidden;
-    
-    background-image: linear-gradient(
-        in oklch longer hue to right,
-        oklch(0.93 0.08 var(--hue1) / 50%),
-        oklch(0.93 0.08 var(--hue2) / 50%)
-      ),
-      linear-gradient(
-        in oklch longer hue to bottom,
-        oklch(0.93 0.08 var(--hue1) / 50%),
-        oklch(0.93 0.08 var(--hue2) / 50%)
-      );
-
-    background-size: 100% 100%;
-
-    animation-name: anim_bg;
-    animation-duration: 5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    @apply bg-background text-foreground;
   }
-  
-  @keyframes anim_bg {
-    0% {
-      --hue1: 0deg;
-      --hue2: 300deg;
-    }
-
-    100% {
-      --hue1: 360deg;
-      --hue2: 660deg;
-    }
-  }
-  
-  .dark body {
-    background-image: linear-gradient(
-        in oklch longer hue to right,
-        oklch(0.2 0.08 var(--hue1) / 70%),
-        oklch(0.2 0.08 var(--hue2) / 70%)
-      ),
-      linear-gradient(
-        in oklch longer hue to bottom,
-        oklch(0.2 0.08 var(--hue1) / 70%),
-        oklch(0.2 0.08 var(--hue2) / 70%)
-      );
-  }
-}
-
-/* Glass effect styles */
-.glass-effect {
-  @apply bg-background/40 backdrop-blur-md border border-white/20 shadow-lg;
-}
-
-.dark .glass-effect {
-  @apply bg-background/40 backdrop-blur-md border border-white/10 shadow-lg;
-}
-
-@keyframes text-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
-}
-
-/* Smooth scrolling container */
-.scroll-smooth {
-  scroll-behavior: smooth;
 }

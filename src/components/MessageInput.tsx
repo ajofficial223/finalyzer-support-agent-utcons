@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 
@@ -18,30 +19,27 @@ const MessageInput = ({ onSend, isLoading }: MessageInputProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center space-x-3 max-w-full px-2">
-      <div className="relative flex-1 flex items-center">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
-          className="w-full px-5 py-3 text-base md:text-sm rounded-full 
-            glass-effect focus:outline-none focus:ring-2 focus:ring-primary/50 
-            focus:border-transparent transition-all duration-200 ease-in-out 
-            shadow-md hover:shadow-lg"
-          disabled={isLoading}
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="flex items-center space-x-2 max-w-full px-2">
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type your message..."
+        className="flex-1 px-4 py-2 text-base md:text-sm rounded-lg border 
+          focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:border-transparent
+          transition-all duration-200 ease-in-out"
+        disabled={isLoading}
+      />
       <button
         type="submit"
         disabled={!message.trim() || isLoading}
-        className={`p-3 rounded-full aspect-square flex items-center justify-center transition-all duration-200 ease-in-out transform shadow-md
+        className={`p-2 rounded-lg transition-all duration-200 ease-in-out transform
           ${message.trim() && !isLoading
-            ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg active:scale-95'
-            : 'bg-muted text-muted-foreground cursor-not-allowed'
+            ? 'bg-[#4A90E2] text-white hover:bg-[#357ABD] hover:shadow-lg active:scale-95'
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
       >
-        <Send size={18} className="transform transition-transform duration-200 ease-in-out" />
+        <Send size={20} className="transform transition-transform duration-200 ease-in-out hover:scale-110" />
       </button>
     </form>
   );

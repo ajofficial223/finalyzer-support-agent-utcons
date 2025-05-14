@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { Message } from './ChatInterface';
 import MessageBubble from './MessageBubble';
@@ -14,29 +15,20 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
   const [currentTypingMessage, setCurrentTypingMessage] = useState<string>('');
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = (smooth = true) => {
-    const container = containerRef.current;
+  const scrollToBottom = () => {
+    const container = messagesEndRef.current?.parentElement;
     if (container) {
       container.scrollTo({
         top: container.scrollHeight,
-        behavior: smooth ? 'smooth' : 'auto'
+        behavior: 'smooth'
       });
     }
   };
 
-  // Initial scroll and when messages change
   useEffect(() => {
     scrollToBottom();
   }, [displayMessages, isLoading]);
-
-  // Continuous scroll during typing
-  useEffect(() => {
-    if (isTyping) {
-      scrollToBottom();
-    }
-  }, [currentTypingMessage, isTyping]);
 
   useEffect(() => {
     // Reset typing animation when no messages
@@ -63,22 +55,17 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
       const words = lastMessage.text.split(' ');
       let wordIndex = 0;
 
-      // Force scroll to latest position when animation starts
-      setTimeout(() => scrollToBottom(false), 50);
-
       const typingInterval = setInterval(() => {
         if (wordIndex < words.length) {
           currentText += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
           setCurrentTypingMessage(currentText);
           wordIndex++;
-          // This will trigger the useEffect above to scroll as text is added
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
           setDisplayMessages(messages);
-          setTimeout(() => scrollToBottom(), 100);
         }
-      }, 50); // Speed of typing animation
+      }, 50); // Adjust speed as needed
 
       return () => clearInterval(typingInterval);
     } else if (lastMessage.sender === 'user' || !isTyping) {
@@ -88,10 +75,7 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
   }, [messages]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="flex flex-col space-y-4 p-4 overflow-y-auto h-full scroll-smooth"
-    >
+    <div className="flex flex-col space-y-4 p-4 overflow-y-auto h-full">
       {displayMessages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       ))}
@@ -103,16 +87,15 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
             text: currentTypingMessage,
             sender: 'ai',
             timestamp: new Date()
-          }}
-          isTyping={true}
+          }} 
         />
       )}
 
       {isLoading && (
-        <div className="flex items-center space-x-2 animate-pulse self-start glass-effect bg-background/60 rounded-2xl rounded-bl-sm px-5 py-3 shadow-lg max-w-[80%]">
-          <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div className="flex items-center space-x-2 animate-pulse self-start bg-white rounded-lg px-4 py-2 shadow-sm max-w-[80%]">
+          <div className="w-2 h-2 bg-[#4A90E2] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-2 h-2 bg-[#4A90E2] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-2 h-2 bg-[#4A90E2] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       )}
       <div ref={messagesEndRef} />

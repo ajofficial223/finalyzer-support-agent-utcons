@@ -1,11 +1,11 @@
+
 import React from 'react';
 
 interface FormattedMessageProps {
   text: string;
-  isTyping?: boolean;
 }
 
-const FormattedMessage: React.FC<FormattedMessageProps> = ({ text, isTyping = false }) => {
+const FormattedMessage: React.FC<FormattedMessageProps> = ({ text }) => {
   // Convert URLs to clickable links
   const formatText = (text: string) => {
     // Split text by newlines first
@@ -23,7 +23,7 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({ text, isTyping = fa
               href={part}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 underline"
+              className="text-blue-500 hover:text-blue-600 underline"
             >
               {part}
             </a>
@@ -62,14 +62,7 @@ const FormattedMessage: React.FC<FormattedMessageProps> = ({ text, isTyping = fa
     });
   };
 
-  return (
-    <div className={`whitespace-pre-wrap ${isTyping ? 'relative' : ''}`}>
-      {formatText(text)}
-      {isTyping && (
-        <span className="inline-block w-[2px] h-4 bg-primary ml-0.5 animate-pulse" />
-      )}
-    </div>
-  );
+  return <div className="whitespace-pre-wrap">{formatText(text)}</div>;
 };
 
 export default FormattedMessage;
