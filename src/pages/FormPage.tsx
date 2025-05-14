@@ -297,6 +297,7 @@ const FormPage = () => {
                           type="button"
                           onClick={togglePasswordVisibility}
                           className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                          tabIndex={-1}
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -394,6 +395,7 @@ const FormPage = () => {
                         <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input 
                           placeholder="Full Name" 
+                          type="text"
                           className="pl-10 h-12 w-full rounded-full glass-effect" 
                           {...field} 
                         />
@@ -443,6 +445,7 @@ const FormPage = () => {
                           type="button"
                           onClick={togglePasswordVisibility}
                           className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                          tabIndex={-1}
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -465,6 +468,7 @@ const FormPage = () => {
                     <FormControl>
                       <Input 
                         placeholder="Business Industry" 
+                        type="text"
                         className="h-12 w-full rounded-full glass-effect" 
                         {...field} 
                       />
@@ -482,6 +486,7 @@ const FormPage = () => {
                     <FormControl>
                       <Input 
                         placeholder="Organization Name" 
+                        type="text"
                         className="h-12 w-full rounded-full glass-effect" 
                         {...field} 
                       />
