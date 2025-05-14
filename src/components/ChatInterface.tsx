@@ -1,12 +1,13 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, RotateCcw, History } from 'lucide-react';
+import { Send, RotateCcw, History, LogOut } from 'lucide-react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SuggestedQuestions from './SuggestedQuestions';
 import { useDrawer } from '@/hooks/useDrawer';
 import ChatHistory from './ChatHistory';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from './ui/drawer';
+import { ModeToggle } from './ModeToggle';
+import { useNavigate } from 'react-router-dom';
 
 export interface Message {
   id: string;
@@ -21,19 +22,82 @@ interface ChatSession {
   createdAt: Date;
 }
 
-const WELCOME_MESSAGE: Message = {
-  id: 'welcome',
-  text: '👋 Hi! I\'m FinAlyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!',
-  sender: 'ai' as const,
-  timestamp: new Date(),
+interface UserProfile {
+  name: string;
+  email: string;
+  industry: string;
+  organization: string;
+}
+
+// Create a function to generate welcome message
+const createWelcomeMessage = (name?: string): Message => {
+  const welcomeText = name
+    ? `👋 Hi, ${name}! I'm FinAlyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!`
+    : '👋 Hi! I\'m FinAlyzer AI — I help you with financial consolidation, analytics, statutory reporting, and more.\nAsk me anything, or try one of the suggested questions below!';
+  
+  return {
+    id: 'welcome-' + Date.now(),
+    text: welcomeText,
+    sender: 'ai' as const,
+    timestamp: new Date(),
+  };
 };
 
+// Webhook URLs
+const CHAT_WEBHOOK_URL = 'https://testingperpose05.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a';
+
 const ChatInterface = () => {
-  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Initialize with an empty array, we'll set the welcome message after loading the profile
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    // Load user profile from localStorage
+    const storedProfile = localStorage.getItem('userProfile');
+    if (storedProfile) {
+      try {
+        const parsedProfile = JSON.parse(storedProfile);
+        setUserProfile(parsedProfile);
+        
+        // Create personalized welcome message with user's name
+        const welcomeMessage = createWelcomeMessage(parsedProfile.name);
+        setMessages([welcomeMessage]);
+      } catch (error) {
+        console.error('Error parsing user profile:', error);
+        // If there's an error, still show the default welcome message
+        setMessages([createWelcomeMessage()]);
+      }
+    } else {
+      // If no profile, show default welcome message
+      setMessages([createWelcomeMessage()]);
+    }
+    
+    // Check if there's an existing session to load
+    const currentSessionId = localStorage.getItem('currentSessionId');
+    if (currentSessionId) {
+      const savedHistory = localStorage.getItem('chatHistory');
+      if (savedHistory) {
+        try {
+          const parsedHistory = JSON.parse(savedHistory);
+          const session = parsedHistory.find((s: any) => s.id === currentSessionId);
+          if (session && session.messages && session.messages.length > 0) {
+            const formattedMessages = session.messages.map((msg: any) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp)
+            }));
+            setMessages(formattedMessages);
+          }
+        } catch (error) {
+          console.error('Error loading existing session:', error);
+        }
+      }
+    }
+  }, []);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -70,7 +134,7 @@ const ChatInterface = () => {
   }, []);
 
   useEffect(() => {
-    if (messages.length > 1) {
+    if (messages.length > 0) {
       const currentSessionId = localStorage.getItem('currentSessionId') || Date.now().toString();
       localStorage.setItem('currentSessionId', currentSessionId);
       
@@ -109,13 +173,18 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      console.log('Sending to webhook:', text);
-      const response = await fetch('https://testingperpose05.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a', {
+      const payload = {
+        message: text,
+        userProfile // Include user profile in the request
+      };
+      
+      console.log('Sending to webhook:', payload);
+      const response = await fetch(CHAT_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify(payload),
       });
 
       const responseText = await response.text();
@@ -159,7 +228,9 @@ const ChatInterface = () => {
   };
 
   const resetChat = () => {
-    setMessages([WELCOME_MESSAGE]);
+    // Create personalized welcome message if user profile exists
+    const welcomeMessage = createWelcomeMessage(userProfile?.name);
+    setMessages([welcomeMessage]);
     localStorage.removeItem('currentSessionId');
   };
 
@@ -171,10 +242,16 @@ const ChatInterface = () => {
       setIsHistoryOpen(false);
     }
   };
+  
+  const handleLogout = () => {
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('currentSessionId');
+    navigate('/');
+  };
 
   return (
-    <div className="flex flex-col h-screen bg-[#F5F7FA] w-full">
-      <header className="bg-white shadow-sm px-4 sm:px-6 py-3 sm:py-4 flex items-center">
+    <div className="flex flex-col h-screen w-full">
+      <header className="glass-effect px-4 sm:px-6 py-3 sm:py-4 flex items-center sticky top-0 z-10">
         <div className="flex-1 flex items-center">
           <img 
             src="/lovable-uploads/5feb2d40-47dc-440e-b075-22b9d60d713b.png"
@@ -183,14 +260,15 @@ const ChatInterface = () => {
           />
           <div>
             <h1 className="text-lg sm:text-xl font-semibold">FinAlyzer Support AI</h1>
-            <p className="text-xs sm:text-sm text-gray-500">Your smart assistant for financial reporting and analytics.</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {userProfile ? `${userProfile.name} - ${userProfile.organization}` : 'Your smart assistant for financial reporting and analytics.'}
+            </p>
           </div>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex space-x-3">
           <button 
             onClick={resetChat} 
-            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm bg-gray-100 
-              hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md 
+            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm glass-effect hover:shadow-md active:scale-95 rounded-md 
               transition-all duration-200 ease-in-out"
             title="Reset Chat"
           >
@@ -199,14 +277,23 @@ const ChatInterface = () => {
           </button>
           <button 
             onClick={() => setIsHistoryOpen(true)} 
-            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm bg-gray-100 
-              hover:bg-gray-200 hover:shadow-md active:scale-95 rounded-md 
+            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm glass-effect hover:shadow-md active:scale-95 rounded-md 
               transition-all duration-200 ease-in-out"
             title="View Chat History"
           >
             <History size={16} />
             <span className="hidden sm:inline">History</span>
           </button>
+          <button 
+            onClick={handleLogout} 
+            className="flex items-center space-x-1 px-2 sm:px-3 py-1 text-sm glass-effect hover:shadow-md active:scale-95 rounded-md 
+              transition-all duration-200 ease-in-out"
+            title="Logout"
+          >
+            <LogOut size={16} />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
+          <ModeToggle />
         </div>
       </header>
 
@@ -217,14 +304,14 @@ const ChatInterface = () => {
         </div>
       </main>
 
-      <footer className="bg-white border-t mt-auto">
+      <footer className="glass-effect border-t mt-auto sticky bottom-0 z-10">
         <div className="container mx-auto px-2 py-2">
           <SuggestedQuestions onSendQuestion={sendMessage} />
         </div>
         <div className="container mx-auto py-4">
           <MessageInput onSend={sendMessage} isLoading={isLoading} />
         </div>
-        <div className="text-center text-sm text-gray-500 py-2 border-t">
+        <div className="text-center text-sm text-muted-foreground py-2 border-t">
           Testing Agent Created by UTCONS
         </div>
       </footer>

@@ -37,19 +37,19 @@ const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({ onSendQuestion 
   }, []);
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden py-2">
       <div 
         ref={scrollContainerRef}
-        className="flex overflow-x-auto pb-4 gap-2 hide-scrollbar"
+        className="flex overflow-x-auto pb-3 gap-3 hide-scrollbar"
       >
-        <div className="flex gap-2 px-2 min-w-full animate-scroll">
+        <div className="flex gap-3 px-2 min-w-full animate-scroll">
           {questions.map((question, index) => (
             <button
               key={index}
-              className="shrink-0 whitespace-nowrap px-3 py-1 text-sm bg-white border border-gray-200 
-                rounded-full hover:bg-gray-50 hover:border-[#4A90E2] hover:shadow-md 
-                active:scale-95 transition-all duration-200 ease-in-out text-gray-700
-                focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-opacity-50"
+              className="shrink-0 whitespace-nowrap px-4 py-2 text-sm glass-effect 
+                rounded-full hover:shadow-md hover:bg-primary/5
+                active:scale-95 transition-all duration-200 ease-in-out text-foreground
+                focus:outline-none focus:ring-2 focus:ring-primary/50"
               onClick={() => onSendQuestion(question)}
             >
               {question}
