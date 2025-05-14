@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, RotateCcw, History, LogOut } from 'lucide-react';
 import MessageList from './MessageList';
