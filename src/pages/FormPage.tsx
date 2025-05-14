@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/ModeToggle';
@@ -183,4 +184,4 @@ const FormPage = () => {
   );
 };
 
-export default FormPage; 
+export default FormPage;

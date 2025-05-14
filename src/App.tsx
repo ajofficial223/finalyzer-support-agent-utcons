@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +19,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
   
   return <>{children}</>;
+};
+
+// FormOrChat component to conditionally render either FormPage or redirect to Chat
+const FormOrChat = () => {
+  const userProfile = localStorage.getItem('userProfile');
+  
+  if (userProfile) {
+    return <Navigate to="/chat" replace />;
+  }
+  
+  return <FormPage />;
 };
 
 const queryClient = new QueryClient();
@@ -42,8 +54,8 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Form page as initial route */}
-              <Route path="/" element={<FormPage />} />
+              {/* Form page as initial route - will redirect to chat if already filled out */}
+              <Route path="/" element={<FormOrChat />} />
               
               {/* Protected Chat route */}
               <Route path="/chat" element={
