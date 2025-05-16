@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +19,28 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
   
   return <>{children}</>;
+};
+
+// Route that redirects to chat if already logged in
+const FormPageWrapper = () => {
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    setIsHydrated(true);
+    const userProfile = localStorage.getItem('userProfile');
+    setIsLoggedIn(!!userProfile);
+  }, []);
+  
+  if (!isHydrated) {
+    return null;
+  }
+  
+  if (isLoggedIn) {
+    return <Navigate to="/chat" replace />;
+  }
+  
+  return <FormPage />;
 };
 
 const queryClient = new QueryClient();
@@ -42,8 +65,8 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Form page as initial route */}
-              <Route path="/" element={<FormPage />} />
+              {/* Form page as initial route - will redirect to chat if already logged in */}
+              <Route path="/" element={<FormPageWrapper />} />
               
               {/* Protected Chat route */}
               <Route path="/chat" element={

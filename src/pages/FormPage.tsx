@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/ModeToggle';
 
@@ -19,6 +19,15 @@ const FormPage = () => {
     industry: '',
     organization: ''
   });
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const userProfile = localStorage.getItem('userProfile');
+    if (userProfile) {
+      // User has already submitted the form, redirect to chat
+      navigate('/chat');
+    }
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -184,4 +193,4 @@ const FormPage = () => {
   );
 };
 
-export default FormPage; 
+export default FormPage;
