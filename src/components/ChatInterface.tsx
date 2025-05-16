@@ -312,7 +312,7 @@ const ChatInterface = () => {
           <MessageInput onSend={sendMessage} isLoading={isLoading} />
         </div>
         <div className="text-center text-sm text-muted-foreground py-2 border-t">
-          Testing Agent Created by UTCONS
+          FinAIque Powered by AI
         </div>
       </footer>
       
