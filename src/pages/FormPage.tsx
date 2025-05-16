@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/ModeToggle';
@@ -75,9 +76,9 @@ const FormPage = () => {
             alt="FinAlyzer Logo" 
             className="h-16 mx-auto mb-4"
           />
-          <h1 className="text-2xl font-bold mb-2">Welcome to FinAlyzer Support</h1>
+          <h1 className="text-2xl font-bold mb-2">Welcome to FinAIque AI Agent</h1>
           <p className="text-muted-foreground">
-            Please provide your information to continue to the chat interface
+            Please provide your information to continue
           </p>
         </div>
         
