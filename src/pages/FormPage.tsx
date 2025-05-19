@@ -48,7 +48,7 @@ const FormPage = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://testingperpose05.app.n8n.cloud/webhook/form fill up finalyzer', {
+      const response = await fetch('https://ajnewaccount.app.n8n.cloud/webhook/form fill up finalyzer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
