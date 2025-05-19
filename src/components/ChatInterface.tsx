@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, RotateCcw, History, LogOut } from 'lucide-react';
 import MessageList from './MessageList';
@@ -44,7 +45,7 @@ const createWelcomeMessage = (name?: string): Message => {
 };
 
 // Webhook URLs
-const CHAT_WEBHOOK_URL = 'https://testingperpose05.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a';
+const CHAT_WEBHOOK_URL = 'https://ajnewaccount.app.n8n.cloud/webhook/8d956423-35a9-4b99-8205-63af1b4e721a';
 
 const ChatInterface = () => {
   const navigate = useNavigate();
